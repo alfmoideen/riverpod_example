@@ -37,7 +37,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
         (error) {
           state = state.copyWith(
             loginStatus: LoginStatus.loginFailed,
-            errorMessage: error.toString(),
+            errorMessage: error.message!,
             token: '',
           );
         },
