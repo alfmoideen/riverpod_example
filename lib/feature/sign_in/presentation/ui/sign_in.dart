@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:parking_app/core/dependencies/authentication/auth_provider.dart';
 import 'package:parking_app/feature/sign_in/presentation/controller/auth_controller.dart';
 
 class LoginPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final loginState = ref.watch(authProvider);
     final loginStatus = ref.watch(
       authProvider.select((value) => value.loginStatus),
     );
@@ -19,7 +19,9 @@ class LoginPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('Login')),
       body: Center(
         child: loginStatus == LoginStatus.idle
-            ? LoginForm()
+            ? LoginForm(
+                mainRef: ref,
+              )
             : loginStatus == LoginStatus.loading
                 ? const CircularProgressIndicator()
                 : loginStatus == LoginStatus.loginSuccess
@@ -29,7 +31,7 @@ class LoginPage extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('Login Failed: $errorMessage'),
-                              LoginForm(),
+                              LoginForm(mainRef: ref),
                             ],
                           )
                         : const SizedBox(),
@@ -39,6 +41,10 @@ class LoginPage extends ConsumerWidget {
 }
 
 class LoginForm extends ConsumerStatefulWidget {
+  final WidgetRef mainRef;
+  const LoginForm({
+    required this.mainRef,
+  });
   @override
   _LoginFormState createState() => _LoginFormState();
 }
@@ -71,14 +77,18 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               final username = _usernameController.text;
               final password = _passwordController.text;
 
-              ref.read(authProvider.notifier).login(
+              await ref.read(authProvider.notifier).login(
                     username: username,
                     password: password,
                   );
+              final newToken = widget.mainRef.read(authProvider).token;
+              if (newToken.isNotEmpty) {
+                updateAuthToken(newToken);
+              }
             },
             child: const Text('Login'),
           ),

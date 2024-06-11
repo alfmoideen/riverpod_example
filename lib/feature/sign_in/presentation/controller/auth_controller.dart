@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parking_app/feature/sign_in/application/sign_in_service.dart';
 import 'package:parking_app/feature/sign_in/application/sign_in_service_impl.dart';
@@ -33,6 +35,7 @@ class AuthNotifier extends StateNotifier<LoginState> {
             token: success.token,
             errorMessage: '',
           );
+          log(state.token);
         },
         (error) {
           state = state.copyWith(

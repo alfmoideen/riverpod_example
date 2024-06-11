@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:parking_app/core/exception/failure.dart';
@@ -18,30 +16,11 @@ class SignInServiceImpl implements SignInService {
   final SignInRepository signInRepository;
   SignInServiceImpl(this.signInRepository);
 
-  // @override
-  // Future<Result<SignInResponse, Failure>> login({
-  //   required String username,
-  //   required String password,
-  // }) async {
-  //   SignInResponse? responseData;
-  //   log('2');
-  //   try {
-  //     responseData = await signInRepository
-  //         .login({"password": password, "username": username});
-  //     return Success(responseData);
-  //   } on Failure catch (e) {
-  //     return Error(e);
-  //   } catch (e) {
-  //     return Error(Failure(exception: Exception(e), message: e.toString()));
-  //   }
-  // }
-
   @override
   Future<Result<SignInResponse, Failure>> login({
     required String username,
     required String password,
   }) async {
-    log('2');
     try {
       Result<SignInResponse, Failure> result = await signInRepository.login(
         SignInRequest(
