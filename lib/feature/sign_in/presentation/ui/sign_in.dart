@@ -2,19 +2,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:parking_app/core/dependencies/authentication/auth_provider.dart';
+import 'package:parking_app/core/router/named_route.dart';
 import 'package:parking_app/feature/sign_in/presentation/controller/auth_controller.dart';
 
-class LoginPage extends ConsumerWidget {
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
+  @override
+  Widget build(BuildContext context) {
     final loginStatus = ref.watch(
       authProvider.select((value) => value.loginStatus),
     );
     final errorMessage = ref.watch(
       authProvider.select((value) => value.errorMessage),
     );
-
+    listenStateChange();
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: Center(
@@ -37,6 +46,15 @@ class LoginPage extends ConsumerWidget {
                         : const SizedBox(),
       ),
     );
+  }
+
+  listenStateChange() {
+    ref.listen<LoginStatus>(authProvider.select((value) => value.loginStatus),
+        (prev, next) {
+      if (next == LoginStatus.loginSuccess) {
+        context.pushReplacementNamed(product);
+      }
+    });
   }
 }
 
