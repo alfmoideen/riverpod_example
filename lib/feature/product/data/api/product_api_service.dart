@@ -17,6 +17,6 @@ final productApiServiceProvider = Provider<ProductApiService>((ref) {
 abstract class ProductApiService {
   factory ProductApiService(Dio dio) => _ProductApiService(dio);
 
-  @GET('auth/products')
+  @GET('products')
   Future<List<Product>> getProducts();
 }

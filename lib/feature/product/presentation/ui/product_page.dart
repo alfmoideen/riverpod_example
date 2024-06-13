@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parking_app/feature/product/presentation/controller/product_controller.dart';
 
-class ProductScreen extends ConsumerWidget {
+class ProductScreen extends ConsumerStatefulWidget {
   const ProductScreen({super.key});
+
+  @override
+  ConsumerState<ProductScreen> createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends ConsumerState<ProductScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(productProvider.notifier).getProducts();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(
     BuildContext context,
-    WidgetRef ref,
   ) {
-    ref.read(productProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
@@ -22,6 +33,6 @@ class ProductScreen extends ConsumerWidget {
 enum ProductStatus {
   idle,
   loading,
-  loginSuccess,
-  loginFailed,
+  success,
+  failed,
 }

@@ -32,7 +32,7 @@ class _ProductApiService implements ProductApiService {
     )
             .compose(
               _dio.options,
-              'auth/products',
+              'products',
               queryParameters: queryParameters,
               data: _data,
             )
